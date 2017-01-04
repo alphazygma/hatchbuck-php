@@ -56,8 +56,6 @@ class Contact implements EntityInterface
      */
     public static function withMap(array $arrayMap)
     {
-        var_export($arrayMap);
-        
         $entity = new static();
         $entity->_contactId    = $arrayMap['contactId'];
         $entity->_firstName    = $arrayMap['firstName'];
