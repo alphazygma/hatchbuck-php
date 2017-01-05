@@ -26,11 +26,25 @@ class Campaign implements EntityInterface
     public static function withMap(array $arrayMap)
     {
         $entity = new static();
-        $entity->_id    = $arrayMap['id'];
-        $entity->_name  = $arrayMap['name'];
-        $entity->_step = (int)$arrayMap['step'];
+        $entity->_id   = hb_array_get($arrayMap, 'id');
+        $entity->_name = hb_array_get($arrayMap, 'name');
+        $entity->_step = (int)hb_array_get($arrayMap, 'step');
 
         return $entity;
+    }
+    
+    /**
+     * Transforms the Entity data into the respective hatchbuck representation.
+     * @return array
+     */
+    public function toArray()
+    {
+        $array = [];
+        hb_array_set($array, 'id', $this->_id);
+        hb_array_set($array, 'name', $this->_name);
+        hb_array_set($array, 'step', $this->_step);
+        
+        return $array;
     }
     
     /** @return string */

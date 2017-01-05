@@ -24,10 +24,23 @@ class Website implements EntityInterface
     public static function withMap(array $arrayMap)
     {
         $entity = new static();
-        $entity->_id  = $arrayMap['id'];
-        $entity->_url = $arrayMap['websiteUrl'];
+        $entity->_id  = hb_array_get($arrayMap, 'id');
+        $entity->_url = hb_array_get($arrayMap, 'websiteUrl');
 
         return $entity;
+    }
+    
+    /**
+     * Transforms the Entity data into the respective hatchbuck representation.
+     * @return array
+     */
+    public function toArray()
+    {
+        $array = [];
+        hb_array_set($array, 'id', $this->_id);
+        hb_array_set($array, 'websiteUrl', $this->_url);
+        
+        return $array;
     }
     
     /** @return string */

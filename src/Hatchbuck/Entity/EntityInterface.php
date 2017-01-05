@@ -17,4 +17,10 @@ interface EntityInterface
      * @return object Entity object from the Array Map data.
      */
     public static function withMap(array $arrayMap);
+    
+    /**
+     * Transforms the Entity data into the respective hatchbuck representation.
+     * @return array
+     */
+    public function toArray();
 }

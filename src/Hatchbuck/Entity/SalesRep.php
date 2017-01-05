@@ -24,10 +24,23 @@ class SalesRep implements EntityInterface
     public static function withMap(array $arrayMap)
     {
         $entity = new static();
-        $entity->_id       = $arrayMap['id'];
-        $entity->_username = $arrayMap['username'];
+        $entity->_id       = hb_array_get($arrayMap, 'id');
+        $entity->_username = hb_array_get($arrayMap, 'username');
 
         return $entity;
+    }
+    
+    /**
+     * Transforms the Entity data into the respective hatchbuck representation.
+     * @return array
+     */
+    public function toArray()
+    {
+        $array = [];
+        hb_array_set($array, 'id', $this->_id);
+        hb_array_set($array, 'username', $this->_username);
+        
+        return $array;
     }
     
     /** @return string */

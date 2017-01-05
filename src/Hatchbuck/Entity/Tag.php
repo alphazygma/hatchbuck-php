@@ -26,11 +26,25 @@ class Tag implements EntityInterface
     public static function withMap(array $arrayMap)
     {
         $entity = new static();
-        $entity->_id    = $arrayMap['id'];
-        $entity->_name  = $arrayMap['name'];
-        $entity->_score = (int)$arrayMap['score'];
+        $entity->_id    = hb_array_get($arrayMap, 'id');
+        $entity->_name  = hb_array_get($arrayMap, 'name');
+        $entity->_score = (int)hb_array_get($arrayMap, 'score');
 
         return $entity;
+    }
+    
+    /**
+     * Transforms the Entity data into the respective hatchbuck representation.
+     * @return array
+     */
+    public function toArray()
+    {
+        $array = [];
+        hb_array_set($array, 'id', $this->_id);
+        hb_array_set($array, 'name', $this->_name);
+        hb_array_set($array, 'score', $this->_score);
+        
+        return $array;
     }
     
     /** @return string */
@@ -50,4 +64,34 @@ class Tag implements EntityInterface
     {
         return $this->_score;
     }
+    
+    // ---------------------------------------------------------------------------------------------
+    // SETTERS -------------------------------------------------------------------------------------
+    
+    /**
+     * @param string $id
+     * @throws \Hatchbuck\Exception\ImmutableAttributeException If ID is already set
+     */
+    public function setId($id)
+    {
+        if (isset($this->_id)) {
+            throw new \Hatchbuck\Exception\ImmutableAttributeException('_id');
+        }
+        
+        $this->_id = $id;
+    }
+
+    /** @param string $name */
+    public function setName($name)
+    {
+        $this->_name = $name;
+    }
+
+    /** @param int $score */
+    public function setScore($score)
+    {
+        $this->_score = $score;
+    }
+
+
 }

@@ -28,12 +28,27 @@ class Phone implements EntityInterface
     public static function withMap(array $arrayMap)
     {
         $entity = new static();
-        $entity->_id      = $arrayMap['id'];
-        $entity->_number = $arrayMap['number'];
-        $entity->_type    = $arrayMap['type'];
-        $entity->_typeId  = $arrayMap['typeId'];
-        
+        $entity->_id     = hb_array_get($arrayMap, 'id');
+        $entity->_number = hb_array_get($arrayMap, 'number');
+        $entity->_type   = hb_array_get($arrayMap, 'type');
+        $entity->_typeId = hb_array_get($arrayMap, 'typeId');
+
         return $entity;
+    }
+    
+    /**
+     * Transforms the Entity data into the respective hatchbuck representation.
+     * @return array
+     */
+    public function toArray()
+    {
+        $array = [];
+        hb_array_set($array, 'id', $this->_id);
+        hb_array_set($array, 'number', $this->_number);
+        hb_array_set($array, 'type', $this->_type);
+        hb_array_set($array, 'typeId', $this->_typeId);
+        
+        return $array;
     }
     
     /** @return string */

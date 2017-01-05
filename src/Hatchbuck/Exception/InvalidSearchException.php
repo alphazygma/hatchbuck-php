@@ -15,7 +15,7 @@ class InvalidSearchException extends \RuntimeException
 {
     public function __construct($previous = null)
     {
-        $message = 'Invalid input for search'.
+        $message = 'Invalid input for search.';
         parent::__construct($message, ExceptionCode::SEARCH_INVALID, $previous);
     }
 }

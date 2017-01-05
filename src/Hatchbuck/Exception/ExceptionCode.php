@@ -14,6 +14,15 @@ class ExceptionCode
     // Using a number grouping structutre, first 3 digits indicate a group, and last 3 digits the
     // specific error within the group
     
+    // Generic group errors group 600xxx
+    const IMMUTABLE_ATTRIBUTE = 600001;
+    const MISSING_ID          = 600002;
+    
     // Search group 100xxx
-    const SEARCH_INVALID = 100000;
+    const SEARCH_INVALID = 100001;
+    
+    // Contact related group 101xxx
+    const CONTACT_EXISTS      = 101001;
+    const CONTACT_INVALID_NEW = 101002;
+
 }

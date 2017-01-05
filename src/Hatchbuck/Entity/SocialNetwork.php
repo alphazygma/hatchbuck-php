@@ -21,19 +21,34 @@ class SocialNetwork implements EntityInterface
     protected $_typeId;
     
     /**
-     * Parses an array map into a <kbd>InstantMessaging</kbd> object.
+     * Parses an array map into a <kbd>SocialNetwork</kbd> object.
      * @param array $arrayMap
-     * @return \Hatchbuck\Entity\InstantMessaging Entity object from the Array Map data.
+     * @return \Hatchbuck\Entity\SocialNetwork Entity object from the Array Map data.
      */
     public static function withMap(array $arrayMap)
     {
         $entity = new static();
-        $entity->_id      = $arrayMap['id'];
-        $entity->_address = $arrayMap['address'];
-        $entity->_type    = $arrayMap['type'];
-        $entity->_typeId  = $arrayMap['typeId'];
+        $entity->_id      = hb_array_get($arrayMap, 'id');
+        $entity->_address = hb_array_get($arrayMap, 'address');
+        $entity->_type    = hb_array_get($arrayMap, 'type');
+        $entity->_typeId  = hb_array_get($arrayMap, 'typeId');
         
         return $entity;
+    }
+    
+    /**
+     * Transforms the Entity data into the respective hatchbuck representation.
+     * @return array
+     */
+    public function toArray()
+    {
+        $array = [];
+        hb_array_set($array, 'id', $this->_id);
+        hb_array_set($array, 'address', $this->_address);
+        hb_array_set($array, 'type', $this->_type);
+        hb_array_set($array, 'typeId', $this->_typeId);
+        
+        return $array;
     }
     
     /** @return string */

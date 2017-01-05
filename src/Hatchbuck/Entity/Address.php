@@ -38,17 +38,37 @@ class Address implements EntityInterface
     public static function withMap(array $arrayMap)
     {
         $entity = new static();
-        $entity->_id        = $arrayMap['id'];
-        $entity->_street    = $arrayMap['street'];
-        $entity->_city      = $arrayMap['city'];
-        $entity->_state     = $arrayMap['state'];
-        $entity->_zip       = $arrayMap['zip'];
-        $entity->_countryId = $arrayMap['countryId'];
-        $entity->_country   = $arrayMap['country'];
-        $entity->_type      = $arrayMap['type'];
-        $entity->_typeId    = $arrayMap['typeId'];
+        $entity->_id        = hb_array_get($arrayMap, 'id');
+        $entity->_street    = hb_array_get($arrayMap, 'street');
+        $entity->_city      = hb_array_get($arrayMap, 'city');
+        $entity->_state     = hb_array_get($arrayMap, 'state');
+        $entity->_zip       = hb_array_get($arrayMap, 'zip');
+        $entity->_countryId = hb_array_get($arrayMap, 'countryId');
+        $entity->_country   = hb_array_get($arrayMap, 'country');
+        $entity->_type      = hb_array_get($arrayMap, 'type');
+        $entity->_typeId    = hb_array_get($arrayMap, 'typeId');
 
         return $entity;
+    }
+    
+    /**
+     * Transforms the Entity data into the respective hatchbuck representation.
+     * @return array
+     */
+    public function toArray()
+    {
+        $array = [];
+        hb_array_set($array, 'id', $this->_id);
+        hb_array_set($array, 'street', $this->_street);
+        hb_array_set($array, 'city', $this->_city);
+        hb_array_set($array, 'state', $this->_state);
+        hb_array_set($array, 'zip', $this->_zip);
+        hb_array_set($array, 'countryId', $this->_countryId);
+        hb_array_set($array, 'country', $this->_country);
+        hb_array_set($array, 'type', $this->_type);
+        hb_array_set($array, 'typeId', $this->_typeId);
+        
+        return $array;
     }
     
     /** @return string */
