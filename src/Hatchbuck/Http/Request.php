@@ -11,6 +11,11 @@ namespace Hatchbuck\Http;
  */
 class Request
 {
+    const METHOD_GET    = 'get';
+    const METHOD_POST   = 'post';
+    const METHOD_PUT    = 'put';
+    const METHOD_DELETE = 'delete';
+
     /** @var string */
     private static $BASE_URI = 'https://api.hatchbuck.com/api';
     
@@ -38,7 +43,17 @@ class Request
     }
     
     /**
-     * Makes a Post Request to the supplied URI with the given data and returns the resulting array
+     * Makes a GET Request to the supplied URI and returns the resulting array map response.
+     * @param string $uri
+     * @return array 
+     */
+    public function get($uri)
+    {
+        return $this->_request(self::METHOD_GET, $uri);
+    }
+    
+    /**
+     * Makes a POST Request to the supplied URI with the given data and returns the resulting array
      * map response.
      * @param string $uri
      * @param array  $dataMap
@@ -46,16 +61,56 @@ class Request
      */
     public function post($uri, $dataMap)
     {
-        $clientOptions         = $this->_getDefaultOptions();
-        $clientOptions['json'] = $dataMap;
+        return $this->_request(self::METHOD_POST, $uri, $dataMap);
+    }
+    
+    /**
+     * Makes a PUT Request to the supplied URI with the given data and returns the resulting array
+     * map response.
+     * @param string $uri
+     * @param array  $dataMap
+     * @return array 
+     */
+    public function put($uri, $dataMap)
+    {
+        return $this->_request(self::METHOD_PUT, $uri, $dataMap);
+    }
+    
+    /**
+     * Makes a DELETE Request to the supplied URI with the given data if supplied and returns the 
+     * resulting array map response.
+     * @param string $uri
+     * @param array  $dataMap (Optional)
+     * @return array 
+     */
+    public function delete($uri, $dataMap = null)
+    {
+        return $this->_request(self::METHOD_DELETE, $uri, $dataMap);
+    }
+    
+    /**
+     * Delegate to make a Request to the supplied URI by the supplied method, with the given data if
+     * supplied and returns the resulting array map response.
+     * @param string $method
+     * @param string $uri
+     * @param array  $dataMap (Optional)
+     * @return array 
+     */
+    protected function _request($method, $uri, $dataMap = null)
+    {
+        $clientOptions = $this->_getDefaultOptions();
+        
+        if (isset($dataMap)) {
+            $clientOptions['json'] = $dataMap;
+        }
 
         $authUri = $this->_getAuthUri($uri);
         
-        $response     = $this->_httpClient->post($authUri, $clientOptions);
-        $responseBody = (string) $response->getBody();
-        $responseList = \GuzzleHttp\json_decode($responseBody, true);
-        
-        return $responseList;
+        $response       = $this->_httpClient->request($method, $authUri, $clientOptions);
+        $responseBody   = (string) $response->getBody();
+        $parsedResponse = \GuzzleHttp\json_decode($responseBody, true);
+
+        return $parsedResponse;
     }
     
     /**
