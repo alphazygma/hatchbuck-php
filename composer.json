@@ -23,7 +23,10 @@
         "satooshi/php-coveralls": "~1.0"
     },
     "autoload": {
-        "psr-4": {"Hatchbuck\\": "src/Hatchbuck"}
+        "psr-4": {"Hatchbuck\\": "src/Hatchbuck"},
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {"Hatchbuck\\": "tests/Hatchbuck"}
