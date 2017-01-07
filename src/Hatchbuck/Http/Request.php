@@ -106,7 +106,14 @@ class Request
 
         $authUri = $this->_getAuthUri($uri);
         
-        $response       = $this->_httpClient->request($method, $authUri, $clientOptions);
+        try {
+            $response = $this->_httpClient->request($method, $authUri, $clientOptions);
+        } catch (\Exception $e) {
+            $this->_handleException($e);
+            throw $e; // Safety check in case a future modification removes the exception thrown
+                      // by the _handleException() method, should technically never execute.
+        }
+        
         $responseBody   = (string) $response->getBody();
         $parsedResponse = \GuzzleHttp\json_decode($responseBody, true);
 
@@ -138,6 +145,53 @@ class Request
         $authUri = $path . '?' . http_build_query($queryMap);
         
         return $authUri;
+    }
+    
+    /**
+     * Handles an exception thrown by Guzzle (which could be from connectivity errors to responses
+     * that use the HTTP 400s status)
+     * @param \GuzzleHttp\Exception\ClientException $e
+     * @throws \Exception The GuzzleException if not a client type of exception, the GuzzleException
+     *      for a non-recognizable client exception, or one of our internal exception that represent
+     *      the captured response.
+     */
+    protected function _handleException(\Exception $e)
+    {
+        // If not a response exception (HTTP 400s), then just propagate
+        if (!$e instanceof \GuzzleHttp\Exception\ClientException) {
+            throw $e;
+        }
+        
+        // Now we can proceed to handle the known exceptions
+        /* @var $e \GuzzleHttp\Exception\ClientException */
+        
+        $errJsonStr = (string) $e->getResponse()->getBody();
+        $errMap     = \GuzzleHttp\json_decode($errJsonStr, true);
+        
+        $ex4message = $this->_getExceptionForMessage($errMap['Message']);
+        
+        if (!empty($ex4message)) {
+            throw $ex4message;
+        }
+        
+        // If we couldn't parse it, then just propagate
+        throw $e;
+    }
+    
+    /**
+     * Mapper between known error message and our internal exceptions.
+     * @param string $message
+     * @return \Exception
+     */
+    protected function _getExceptionForMessage($message)
+    {
+        $sanitizedMessage = strtolower($message);
+        
+        if (strpos('no contact found for given search criteria.', $sanitizedMessage) !== false) {
+            return new \Hatchbuck\Exception\User\NoContactFoundException();
+        }
+        
+        return null;
     }
     
     /**
@@ -179,4 +233,5 @@ class Request
             $optionsMap[$key] = $authPair->getFilePath();
         }
     }
+    
 }

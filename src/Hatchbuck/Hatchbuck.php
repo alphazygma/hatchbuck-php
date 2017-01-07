@@ -27,7 +27,7 @@ class Hatchbuck
      * Get a list of Contacts for the supplied search input.
      * 
      * @param \Hatchbuck\SearchInput $searchInput
-     * @return \Hatchbuck\Entity\Contact[]
+     * @return \Hatchbuck\Entity\Contact[]|null Return <kbd>NULL</kbd> if no Contact was found.
      * @throws \Hatchbuck\Exception\InvalidSearchException
      */
     public function search(SearchInput $searchInput)
@@ -45,7 +45,12 @@ class Hatchbuck
         hb_array_set($searchArray, 'emails', $searchInput->getEmailList());
         
         $reqClient    = $this->_getRequestClient();
-        $responseList = $reqClient->post($api, $searchArray);
+        $responseList = [];
+        try {
+            $responseList = $reqClient->post($api, $searchArray);
+        } catch (\Hatchbuck\Exception\User\NoContactFoundException $e) {
+            return null;
+        }
 
         // In-place replacement of the Array Map representation with the Contact Object representation.
         $contactList = hb_to_entity_list($responseList, \Hatchbuck\Entity\Contact::class);

@@ -24,5 +24,6 @@ class ExceptionCode
     // Contact related group 101xxx
     const CONTACT_EXISTS      = 101001;
     const CONTACT_INVALID_NEW = 101002;
+    const CONTACT_NOT_FOUND   = 101003;
 
 }
